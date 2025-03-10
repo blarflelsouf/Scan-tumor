@@ -4,8 +4,8 @@
 ## Install new version from main branche
 Get the latest master:
 
-git checkout master (/!\prerequesite = clean git status)
+git checkout main (/!\prerequesite = clean git status)
 
-git pull origin master
+git pull origin main
 
 pip install -r requirements.txt
