@@ -13,5 +13,5 @@ pandas
 matplotlib
 seaborn
 scikit-learn
-PIL.Image #For image resizing - to delete if not used in preprocess
-io.BytesIO #To load image in memory - to delete if not used in preprocess
+pillow #For image resizing - to delete if not used in preprocess
+#io.BytesIO # Error when pip installing, discarded for the moment #To load image in memory - to delete if not used in preprocess
