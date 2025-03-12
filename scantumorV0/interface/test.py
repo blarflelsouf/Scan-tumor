@@ -1,5 +1,4 @@
 import ml_logic.data as data
-import ml_logic.data as data
 import ml_logic.modelCNN as modelCNN
 import ml_logic.preprocessor as prepro
 import ml_logic.modelvgg16 as modelvgg
@@ -34,8 +33,10 @@ data_train2 = data_import[1]
 data_train = pd.concat([data_train, data_train2])
 
 data_test = data_train.sample(nb_image_test)  # Stock a sample of the data in a variable data_test
+a= list(data_test.index)
+data_train.drop(a, axis=0, inplace=True) # Drop datatest in datatrain
 
-
+print(data_train)
 
                   ######### Preprocess data #########
 
@@ -44,17 +45,17 @@ data_test = data_train.sample(nb_image_test)  # Stock a sample of the data in a 
 ### Variable for preprocessing data ###
 
 batch_size_prepro=32 # -> batch size of preprocessing
-img_size = (224, 224) # -> choose the size of picture
+img_size = (150, 150) # -> choose the size of picture
 
 
 ### Prepropress the data by resizing, padding ###
 
-data_train_prepro = prepro.preprocess(data_train, batch_size_prepro, img_size) # Stock the data preprocess in a variable data_train_prepro
-data_test_prepro = prepro.preprocess(data_test, batch_size_prepro, img_size) # Stock the data preprocess in a variable data_test_prepro
+#data_train_prepro = prepro.preprocess(data_train, batch_size_prepro, img_size) # Stock the data preprocess in a variable data_train_prepro
+#data_test_prepro = prepro.preprocess(data_test, batch_size_prepro, img_size) # Stock the data preprocess in a variable data_test_prepro
 
 
 
-                ######### Data augmentation #########
+                    ######### Data augmentation #########
 
 '''Complete the dataset train with new picture for data augmentation, variables are:
     -
@@ -62,12 +63,9 @@ data_test_prepro = prepro.preprocess(data_test, batch_size_prepro, img_size) # S
 
 ### Variable for data augmentation ###
 
-n = 900 # -> nbr of picture generated of non-tumor
-augdir="/home/blqrf/code/blarflelsouf/scan-tumor/raw_data/archive/Augmented_Training_Binary" # directory to store the images if it does not exist it will be created
+n = 3000 # -> nbr of picture generated of non-tumor
+augdir=r'/home/blqrf/code/blarflelsouf/Scan-tumor/notebooks/raw_data' # directory to store the images if it does not exist it will be created
 
 ### Data augmentation ###
 
-data_augm = data_augment.make_and_store_images(data_train_prepro, img_size, augdir, n, color_mode='rgb', save_prefix='aug-',save_format='jpg')
-#data_train_prepro = pd.concat([data_train_prepro, data_augm])
-
-print(data_augm)
+data_augment.make_and_store_images(data_train, augdir, n, img_size, color_mode='rgb', save_prefix='aug-',save_format='jpg')
