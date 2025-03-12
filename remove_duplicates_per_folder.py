@@ -1,7 +1,6 @@
-import hashlib
 import os
+import hashlib
 
-# Function to compute the hash of a file
 def compute_hash(file):
     hasher = hashlib.md5()
     with open(file, 'rb') as f:
@@ -9,7 +8,6 @@ def compute_hash(file):
         hasher.update(buf)
     return hasher.hexdigest()
 
-# Function to list the files with their hash
 def listfiles(directory_path):
     hash_dict = {}
     for root, dirs, files in os.walk(directory_path):
@@ -22,7 +20,6 @@ def listfiles(directory_path):
                 hash_dict[file_hash] = [file_path]
     return hash_dict
 
-# Function to display the duplicates (hash and paths)
 def display_duplicates(directory_path):
     hash_dict = listfiles(directory_path)
     duplicates = {hash_value: paths for hash_value, paths in hash_dict.items() if len(paths) > 1}
@@ -33,18 +30,15 @@ def display_duplicates(directory_path):
         for path in paths:
             print(f" - {path}")
 
-duplicates = display_duplicates('data/Training/pituitary')
-duplicates
-
-# Function to get and save the duplicates (hash and paths)
 def find_duplicates(directory_path):
     hash_dict = listfiles(directory_path)
     duplicates = {hash_value: paths for hash_value, paths in hash_dict.items() if len(paths) > 1}
     return duplicates
 
-# Function to remove the duplicates
 def remove_duplicates(directory_path):
     duplicates = find_duplicates(directory_path)
-    for paths in duplicates.items():
+    for hash_value, paths in duplicates.items():
+        print(f"Removing duplicates for hash {hash_value}:")
         for path in paths[1:]:
+            print(f" - Removing {path}")
             os.remove(path)
