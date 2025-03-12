@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from tensorflow.keras import Sequential, layers
 from tensorflow.keras import models
+from tensorflow.keras import metrics
 
 
 
@@ -11,11 +12,23 @@ from tensorflow.keras import models
 
 
 
+
+# Shape des images
+in_shape = (224, 224, 3)
+
 # Debut du model
+model = Sequential([
+    layers.Conv2D(16, (3,3), padding='same', activation="relu", input_shape=in_shape),
+    layers.MaxPool2D(pool_size=(2,2)),
+    layers.Conv2D(32, (2,2), padding='same', activation="relu"),
+    layers.MaxPool2D(pool_size=(2,2)),
+    layers.Flatten(),
+    layers.Dense(50, activation='relu'),
+    layers.Dropout(0.3),
+    layers.Dense(10, activation='softmax')
+])
 
-model = models.Sequential()
-
-model.add(layers.Conv2D(6, kernel_size=(3, 3), activation='relu', input_shape=(225, 225, 3)))
-model.add(layers.Conv2D(4, kernel_size=(3), activation='relu')) # kernel_size = 3 <==> (3, 3)
-model.add(layers.Flatten())
-model.add(layers.Dense(1, activation='sigmoid'))
+# Compilation du model
+model.compile(loss='categorical_crossentropy',
+              optimizer='adam',
+              metrics=[metrics.Recall()])
