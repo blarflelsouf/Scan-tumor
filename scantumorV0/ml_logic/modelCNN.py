@@ -54,7 +54,6 @@ def train_model(
 
     history = model.fit(
         data_train,
-        validation_split=0.3,
         epochs=epochs,
         batch_size=batch_size,
         callbacks=[es],

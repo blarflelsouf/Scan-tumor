@@ -1,4 +1,5 @@
 import ml_logic.data as data
+import ml_logic.data as data
 import ml_logic.modelCNN as modelCNN
 import ml_logic.preprocessor as prepro
 import ml_logic.modelvgg16 as modelvgg
@@ -62,62 +63,11 @@ data_test_prepro = prepro.preprocess(data_test, batch_size_prepro, img_size) # S
 ### Variable for data augmentation ###
 
 n = 900 # -> nbr of picture generated of non-tumor
-augdir=r"/home/blqrf/code/blarflelsouf/scan-tumor/raw_data/archive/Augmented_Training_Binary" # directory to store the images if it does not exist it will be created
+augdir="/home/blqrf/code/blarflelsouf/scan-tumor/raw_data/archive/Augmented_Training_Binary" # directory to store the images if it does not exist it will be created
 
 ### Data augmentation ###
 
 data_augm = data_augment.make_and_store_images(data_train_prepro, img_size, augdir, n, color_mode='rgb', save_prefix='aug-',save_format='jpg')
-data_train_prepro = pd.concat([data_train_prepro, data_augm])
+#data_train_prepro = pd.concat([data_train_prepro, data_augm])
 
-
-                ######### Train a model #########
-
-'''Train a model and report his history. You can choose between:
-    - the batch size of training
-    - the patience of early stopping
-    - the number of epochs
-    - the type of model: CNN // VGG
-'''
-
-### Variable for loading data ###
-
-batch_size_train = 128 # -> batch size of training model (64/128 recommended)
-patience = 1 # -> patience of early stopping
-epochs = 5 # -> number of epochs
-model = '' # -> 'CNN'//'VGG'//'ALL'
-history_all = []
-
-
-### Train model ###
-
-if model == 'CNN':
-    history = modelCNN.model_train(data_train_prepro, batch_size_train, patience, epochs) #CNN#
-
-elif model == 'VGG':
-    history = modelvgg.train_model(data_train_prepro, epochs, patience, batch_size_train) #VGG16#
-
-elif model == 'ALL':
-    history_all.append(modelvgg.train_model(data_train_prepro, epochs, patience, batch_size_train)) #VGG16#
-    history_all.append(modelCNN.model_train(data_train_prepro, batch_size_train, patience, epochs)) #CNN#
-
-
-
-                ######### Evaluate a model #########
-
-
-
-
-'''
-def plot_history(history):
-    fig, ax = plt.subplots(1, 2, figsize=(15,5))
-    ax[0].set_title('loss')
-    ax[0].plot(history.epoch, history.history["loss"], label="Train loss")
-    ax[0].plot(history.epoch, history.history["val_loss"], label="Validation loss")
-    ax[1].set_title('accuracy')
-    ax[1].plot(history.epoch, history.history["accuracy"], label="Train acc")
-    ax[1].plot(history.epoch, history.history["val_accuracy"], label="Validation acc")
-    ax[0].legend()
-    ax[1].legend()
-
-plot_history(history)
-'''
+print(data_augm)
