@@ -2,11 +2,12 @@ import os
 import pandas as pd
 import shutil
 import tensorflow as tf
+import cv2
 
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 
-def make_and_store_images(data_train, augdir, n,  img_size,  color_mode='rgb', save_prefix='aug-',save_format='jpg'):
+def make_and_store_images(data_train, augdir, n, color_mode='rgb', save_prefix='aug-',save_format='jpg'):
     #augdir is the full path where augmented images will be stored
     #n is the number of augmented images that will be created for each class that has less than n image samples
     # img_size  is a tupple(height,width) that specifies the size of the augmented images
@@ -35,6 +36,8 @@ def make_and_store_images(data_train, augdir, n,  img_size,  color_mode='rgb', s
             aug_img_count=0
             delta=n - sample_count  # number of augmented images to create
             msg='{0:40s} for class {1:^30s} creating {2:^5s} augmented images'.format(' ', label, str(delta))
+            im = cv2.imread(group['images_paths'][0])
+            img_size = im.shape[:2]
             print(msg, '\r', end='') # prints over on the same line
             aug_gen=gen.flow_from_dataframe(group,  x_col='images_paths', y_col=None, target_size=img_size,
                                             class_mode=None, batch_size=1, shuffle=False,
