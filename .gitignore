@@ -401,4 +401,7 @@ FodyWeavers.xsd
 
 # Env & version files [JCDS]
 .env
-.python-version
+
+notebooks/
+raw_data/
+data_parent/

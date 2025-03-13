@@ -8,10 +8,8 @@ pytest
 pylint
 ipdb
 jupyterlab
-numpy
-pandas
 matplotlib
 seaborn
 scikit-learn
 pillow #For image resizing - to delete if not used in preprocess
-#io.BytesIO # Error when pip installing, discarded for the moment #To load image in memory - to delete if not used in preprocess
+opencv-python
