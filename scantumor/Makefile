@@ -1,0 +1,23 @@
+#################### PACKAGE ACTIONS ###################
+# To be completed if needed
+
+################### DATA SOURCES ACTIONS ################
+# To be completed if needed
+
+##################### TESTS #####################
+test_preprocessor:
+	@pytest \
+	test/preprocessor.py\
+
+##################### CLEANING #####################
+
+clean:
+	@rm -f */version.txt
+	@rm -f .coverage
+	@rm -fr **/__pycache__ **/*.pyc
+	@rm -fr **/build **/dist
+	@rm -fr proj-*.dist-info
+	@rm -fr proj.egg-info
+	@rm -f **/.DS_Store
+	@rm -f **/*Zone.Identifier
+	@rm -f **/.ipynb_checkpoints
