@@ -4,11 +4,13 @@ import ml_logic.preprocessor as prepro
 import ml_logic.modelvgg16 as modelvgg
 import ml_logic.data_augment as data_augment
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 
 ################################## V0 ##################################
 
+print('⭐ Loading of data ⭐')
 
 
                     ######## Loading data ########
@@ -27,10 +29,9 @@ nb_image_test = 10 # -> Nbr of image to test
 
 ### Load data  ###
 
-data_import = data.load_data(local, path_train, path_test, type_data) # Call the load-data file
-data_train = data_import[0] # Stock the data in a variable data_train
-data_train2 = data_import[1]
-data_train = pd.concat([data_train, data_train2])
+df_train = data.load_data(local, path_train, type_data) # Bring a df for train
+df_train = data.load_data(local, path_test, type_data) # Bring a df for test
+data_train = pd.concat([df_train, df_train]) # Concat them together
 
 data_test = data_train.sample(nb_image_test)  # Stock a sample of the data in a variable data_test
 a= list(data_test.index)
@@ -40,19 +41,21 @@ data_train.drop(a, axis=0, inplace=True) # Drop datatest in datatrain
 
                     ######### Data augmentation #########
 
-'''Complete the dataset train with new picture for data augmentation, variables are:
+'''Complete the dataset train with new picture for data augmentation, and add them to the data train, variables are:
     -
 '''
 
 ### Variable for data augmentation ###
 
-n = 3000 # -> nbr of picture generated of non-tumor
+n = 0 # -> nbr of picture generated of non-tumor
 augdir=r'/home/blqrf/code/blarflelsouf/Scan-tumor/notebooks/raw_data' # directory to store the images if it does not exist it will be created
 img_size = (224, 224) # -> choose the size of picture
 
 ### Data augmentation ###
 
-data_augment.make_and_store_images(data_train, augdir, n, img_size, color_mode='rgb', save_prefix='aug-',save_format='jpg')
+data_augment.make_and_store_images(data_train, augdir, n, img_size, color_mode='rgb', save_prefix='aug-',save_format='jpg') # -> create and store pic aug in a directory
+df_aug = data.load_data(local, augdir, type_data) # -> Store the path of pic aug in a df
+data_train = pd.concat([data_train, df_aug]) # -> concat the df train and the df aug
 
 
 
@@ -85,43 +88,46 @@ data_test_prepro = prepro.preprocess(data_test, batch_size_prepro, img_size) # S
 
 ### Variable for loading data ###
 
-batch_size_train = 128 # -> batch size of training model (64/128 recommended)
+batch_size_train = 256 # -> batch size of training model (64/128 recommended)
 patience = 1 # -> patience of early stopping
 epochs = 5 # -> number of epochs
-model = '' # -> 'CNN'//'VGG'//'ALL'
+model = 'VGG' # -> 'CNN'//'VGG'//'ALL'
 history_all = []
 
 
 ### Train model ###
 
 if model == 'CNN':
-    history = modelCNN.model_train(data_train_prepro, batch_size_train, patience, epochs) #CNN#
+    history = modelCNN.model_train(data_train_prepro, data_test_prepro, batch_size_train, patience, epochs) #CNN#
 
 elif model == 'VGG':
-    history = modelvgg.train_model(data_train_prepro, epochs, patience, batch_size_train) #VGG16#
+    history = modelvgg.train_model(data_train_prepro, data_test_prepro, epochs, patience, batch_size_train) #VGG16#
 
 elif model == 'ALL':
-    history_all.append(modelvgg.train_model(data_train_prepro, epochs, patience, batch_size_train)) #VGG16#
-    history_all.append(modelCNN.model_train(data_train_prepro, batch_size_train, patience, epochs)) #CNN#
+    history_all.append(modelvgg.train_model(data_train_prepro, data_test_prepro, epochs, patience, batch_size_train)) #VGG16#
+    history_all.append(modelCNN.model_train(data_train_prepro, data_test_prepro, batch_size_train, patience, epochs)) #CNN#
+
+print('⭐ Model chosen:', model)
+
+                ######### Evaluate one model #########
 
 
+''' Print an evaluation score '''
+score = history[1] # -> score of evaluation on the test dataset
+histo = history[0] # -> history of the model to evaluate
 
-                ######### Evaluate a model #########
+print('⭐ Le score du model sur le test est:', score)
 
 
-
-
-'''
-def plot_history(history):
+def plot_history(histo):
     fig, ax = plt.subplots(1, 2, figsize=(15,5))
     ax[0].set_title('loss')
-    ax[0].plot(history.epoch, history.history["loss"], label="Train loss")
-    ax[0].plot(history.epoch, history.history["val_loss"], label="Validation loss")
+    ax[0].plot(histo.epoch, histo.history["loss"], label="Train loss")
+    ax[0].plot(histo.epoch, histo.history["val_loss"], label="Validation loss")
     ax[1].set_title('accuracy')
-    ax[1].plot(history.epoch, history.history["accuracy"], label="Train acc")
-    ax[1].plot(history.epoch, history.history["val_accuracy"], label="Validation acc")
+    ax[1].plot(histo.epoch, histo.history["accuracy"], label="Train acc")
+    ax[1].plot(histo.epoch, histo.history["val_accuracy"], label="Validation acc")
     ax[0].legend()
     ax[1].legend()
 
-plot_history(history)
-'''
+plot_history(histo)

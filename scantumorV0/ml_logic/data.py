@@ -80,19 +80,17 @@ If local is True:
             - Or return 2 dataset with pictures and theirs labels
 '''
 
-def load_data(local: bool, path_train: str, path_test: str, type_data: bool):
+def load_data(local: bool, path: str, type_data: bool):
     if local is True:
         # If you already download the dataset:
         print('File is found on local!')
 
         if type_data is True:
-            df_train = load_data_dataframe(path_train)
-            df_test = load_data_dataframe(path_test)
-            print('dataframe completed')
-            return df_train, df_test # Return 2 df for train and test
+            df = load_data_dataframe(path)
+            print('⭐ dataframe completed ⭐')
+            return df # Return 1 df
 
         else:
-            ds_train = load_data_dataset(path_train)
-            ds_test = load_data_dataset(path_test)
-            print('dataset completed')
-            return ds_train, ds_test # Return 2 ds for train and test
+            ds = load_data_dataset(path)
+            print('⭐ dataset completed ⭐')
+            return ds # Return 1 df
