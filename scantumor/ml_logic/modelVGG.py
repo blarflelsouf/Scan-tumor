@@ -94,9 +94,12 @@ def train_model(path_train_prepro, path_test_prepro, epochs, patience, batch_siz
             validation_data=train_ds[1]
             )
 
-    print('🧮 Predict of the test')
-    score = model.predict(test_ds)
+    #print('🧮 Predict of the test')
+    #pred = model.predict(test_ds)
+
+    print('🧮 Evalutation of the model on test')
+    scores = model.evaluate(test_ds)
 
     print('⭐ Return of the results')
 
-    return history, score
+    return history, scores

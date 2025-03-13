@@ -52,5 +52,9 @@ model = 'VGG' # -> 'CNN'//'VGG'//'ALL'
 if model == 'VGG':
     history = modelvgg.train_model(path_train_prepro, path_test_prepro, epochs, patience, batch_size_train, img_size) #VGG16#
 
+histo_train = history[0]
+histo_train = histo_train.__dict__['accuracy'].mean()
 
-print(history)
+histo_test = history[1]
+print('⭐ Accuracy on train dataset: ', histo_train)
+print('⭐ Accuracy on test dataset: ', histo_test)
