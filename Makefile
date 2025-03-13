@@ -5,7 +5,9 @@
 # To be completed if needed
 
 ##################### TESTS #####################
-# To be completed if needed
+test_preprocessor:
+	@pytest \
+	test/preprocessor.py\
 
 ##################### CLEANING #####################
 
