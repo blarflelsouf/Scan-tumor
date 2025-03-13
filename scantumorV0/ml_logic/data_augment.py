@@ -44,4 +44,4 @@ def make_and_store_images(data_train, augdir, n,  img_size,  color_mode='rgb', s
                 images=next(aug_gen)
                 aug_img_count += len(images)
             total +=aug_img_count
-    return print('Total Augmented images created= ', total)
+    return print('⭐ Total Augmented images created= ', total)

@@ -18,5 +18,5 @@ def preprocess(data, batch_size, img_size):
     )
 
 
-    print('preprocessed completed')
+    print('⭐ preprocessed completed ⭐')
     return train_gen

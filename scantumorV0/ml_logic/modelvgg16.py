@@ -53,7 +53,12 @@ def build_model():
                   metrics=['accuracy'])
     return model
 
-def train_model(data_train_prepro, epochs, patience, batch_size):
+def evaluate(model, data_test):
+    scores = model.evaluate(data_test)
+    return scores
+
+
+def train_model(data_train_prepro, data_test, epochs, patience, batch_size):
     model=build_model()
 
     adam = optimizers.Adam(learning_rate = 0.01)
@@ -76,4 +81,8 @@ def train_model(data_train_prepro, epochs, patience, batch_size):
             batch_size=batch_size
             )
 
-    return history
+    scores = evaluate(model, data_test)
+
+
+
+    return history, scores

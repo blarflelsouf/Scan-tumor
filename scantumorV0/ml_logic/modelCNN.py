@@ -46,7 +46,7 @@ def train_model(
 
 
     es = EarlyStopping(
-        monitor="val_loss",
+        monitor="loss",
         patience=patience,
         restore_best_weights=True,
         verbose=2
@@ -62,10 +62,15 @@ def train_model(
 
     return model, history
 
+def evaluate(model, data_test):
+    scores = model.evaluate(data_test)
+    return scores
 
-def model_train(data_train: pd.DataFrame, batch_size: int, patience:int, epochs:int):
+
+
+def model_train(data_train: pd.DataFrame, data_test:pd.DataFrame, batch_size: int, patience:int, epochs:int):
     model = initialize_model()
     model = compile_model(model)
     history = train_model(model, data_train, batch_size=batch_size, patience=patience, epochs=epochs)
-
-    return history
+    scores = evaluate(model, data_test)
+    return history, scores
