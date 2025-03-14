@@ -47,24 +47,28 @@ prepro.preprocess_write_squared_image_to_dir(df_test, img_size, root_dest_dir= p
 
 
 
-                        ######### Bianry model #########
+                        ######### Binary model #########
 ''' Use a VGG16 model to categorized the data, metric used is recall'''
 ### Variable for loading data ###
 
-batch_size_train = 256 # -> batch size of training model (64/128 recommended)
-patience = 1 # -> patience of early stopping
-epochs = 10 # -> number of epochs
+batch_size_train = 256 # -> batch size of training model (128/256 recommended)
+patience = 2 # -> patience of early stopping
+epochs = 20 # -> number of epochs
+nbr_img = 2500 # -> Nbr of pic no_tumor pic added to the data
 
 ### Train model ###
 
-history = modelbin.train_model_bin(path_train_prepro, path_test_prepro, epochs, patience, batch_size_train, img_size) #VGG16#
+history_bin = modelbin.train_model_bin(path_train_prepro, path_test_prepro, nbr_img, img_size, patience, epochs, batch_size_train) #Binary#
 
-histo_train = history[0]
-histo_train = histo_train.__dict__['recall'].mean()
+histo_bin_train = history_bin[0]
+recall_bin_train = histo_bin_train.__dict__['history']['recall']
 
-histo_test = history[1]
-print('⭐ Binary model: Recall on train dataset: ', histo_train)
-print('⭐ Binary model: Recall on test dataset: ', histo_test)
+histo_bin_test = history_bin[1]
+print('⭐ Binary model: Recall on train dataset: ', recall_bin_train)
+print('⭐ Binary model: Recall on test dataset: ', histo_bin_test)
+
+# Model bin fitted
+model_bin = history_bin[2]
 
 
 
@@ -77,16 +81,19 @@ print('⭐ Binary model: Recall on test dataset: ', histo_test)
 ### Variable for loading data ###
 
 batch_size_train = 256 # -> batch size of training model (64/128 recommended)
-patience = 1 # -> patience of early stopping
-epochs = 10 # -> number of epochs
+patience = 2 # -> patience of early stopping
+epochs = 20 # -> number of epochs
 
 ### Train model ###
 
-history = modelvgg.train_model_cat(path_train_prepro, path_test_prepro, epochs, patience, batch_size_train, img_size) #VGG16#
+history_cat = modelvgg.train_model_cat(path_train_prepro, path_test_prepro, epochs, patience, batch_size_train, img_size) #VGG16#
 
-histo_train = history[0]
-histo_train = histo_train.__dict__['accuracy'].mean()
+histo_cat_train = history_cat[0]
+histo_cat_train = histo_cat_train.__dict__['accuracy'].mean()
 
-histo_test = history[1]
-print('⭐ Accuracy on train dataset: ', histo_train)
-print('⭐ Accuracy on test dataset: ', histo_test)
+histo_cat_test = history_cat[1]
+print('⭐ Accuracy on train dataset: ', histo_cat_train)
+print('⭐ Accuracy on test dataset: ', histo_cat_test)
+
+# Model fitted
+model_cat= history_cat[2]

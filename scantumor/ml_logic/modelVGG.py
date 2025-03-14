@@ -53,10 +53,10 @@ def build_model():
                   metrics=['accuracy'])
     return model
 
-def train_model_cat(path_train_prepro, path_test_prepro, epochs, patience, batch_size, img_size):
-    print('🧮 Training of the model')
+
+def make_tensor_train(path_train: str, img_size):
     train_ds = image_dataset_from_directory(
-        path_train_prepro,
+        path_train,
         labels="inferred",
         class_names=["notumor","glioma", 'meningioma', 'pituitary'],
         label_mode="categorical",
@@ -64,9 +64,10 @@ def train_model_cat(path_train_prepro, path_test_prepro, epochs, patience, batch
         validation_split=0.25,
         subset='both',
         image_size=img_size,
-        batch_size=batch_size)
+        batch_size=32)
 
 
+def make_tensor_test(path_test_prepro: str, img_size):
     test_ds = image_dataset_from_directory(
         path_test_prepro,
         labels="inferred",
@@ -74,11 +75,24 @@ def train_model_cat(path_train_prepro, path_test_prepro, epochs, patience, batch
         label_mode="categorical",
         seed=123,
         image_size=img_size,
-        batch_size=batch_size)
+        batch_size=32)
 
 
+
+
+def train_model_cat(path_train_prepro, path_test_prepro, epochs, patience, batch_size, img_size):
+
+    print('🧮 Training of the model')
+    # Making a tensor of the binary dataset train
+    ds_train = make_tensor_train(path_train_prepro, img_size)
+
+    # Making a tensor of the dataset test
+    ds_test = make_tensor_test(path_test_prepro, img_size)
+
+    # Initialize the model
     model=build_model()
 
+    # Params for early stopping
     es = EarlyStopping(
         patience=patience,
         restore_best_weights=True,
@@ -87,19 +101,19 @@ def train_model_cat(path_train_prepro, path_test_prepro, epochs, patience, batch
 
 
     history = model.fit(
-            train_ds[0],
+            ds_train[0],
             epochs=epochs,
             callbacks=[es],
             batch_size=batch_size,
-            validation_data=train_ds[1]
+            validation_data=ds_train[1]
             )
 
     #print('🧮 Predict of the test')
     #pred = model.predict(test_ds)
 
     print('🧮 Evalutation of the model on test')
-    scores = model.evaluate(test_ds)
+    scores = model.evaluate(ds_test)
 
     print('⭐ Return of the results')
 
-    return history, scores
+    return history, scores, model

@@ -11,7 +11,7 @@ def make_square_with_padding(image: np.ndarray, dest_img_size) -> np.ndarray:
     """
     Transform a rectangular image into a square image by adding padding.
     """
-    print('🧮 Images are in padding and resize process')
+
     color= (0, 0, 0) #Black
     height, width = image.shape[:2]
     size = max(height, width)
@@ -26,7 +26,7 @@ def make_square_with_padding(image: np.ndarray, dest_img_size) -> np.ndarray:
     squared_image = cv2.copyMakeBorder(image, top, bottom, left, right, cv2.BORDER_CONSTANT, value=color)
 
     image_resize = cv2.resize(squared_image,dest_img_size)
-    print('⭐ Padding and resize success')
+
 
     return image_resize
 
@@ -81,6 +81,7 @@ def preprocess_write_image(src_img_df: pd.DataFrame,
 
     ##################################### RESIZING IMAGES AND WRITE THEM INTO REPOSITORY ##################
     # Create squared images with a black padding
+    print('🧮 Images are in padding and resize process')
     nb_image = 0
     for index, row in src_img_df.iterrows():
         nb_image += 1
@@ -91,7 +92,7 @@ def preprocess_write_image(src_img_df: pd.DataFrame,
     print(f"{nb_image} images resized to squared image with padding in repository {img_preprocessed_dir}")
 
 
-    print('🧮 Images created')
+    print('⭐ Images created')
 
     return None
 
