@@ -7,10 +7,11 @@ import cv2
 import os
 import shutil
 
-def make_square_with_padding(image: np.ndarray) -> np.ndarray:
+def make_square_with_padding(image: np.ndarray, dest_img_size) -> np.ndarray:
     """
     Transform a rectangular image into a square image by adding padding.
     """
+    print('🧮 Images are in padding and resize process')
     color= (0, 0, 0) #Black
     height, width = image.shape[:2]
     size = max(height, width)
@@ -23,7 +24,11 @@ def make_square_with_padding(image: np.ndarray) -> np.ndarray:
 
     # # Apply padding
     squared_image = cv2.copyMakeBorder(image, top, bottom, left, right, cv2.BORDER_CONSTANT, value=color)
-    return squared_image
+
+    image_resize = cv2.resize(squared_image,dest_img_size)
+    print('⭐ Padding and resize success')
+
+    return image_resize
 
 def preprocess_create_dir(src_img_df, root_dest_dir):
     """
@@ -81,7 +86,7 @@ def preprocess_write_image(src_img_df: pd.DataFrame,
         nb_image += 1
         image = cv2.imread(row[0])
         image_name = os.path.split(row[0])[1] #Tail = image name
-        square_image = cv2.resize(make_square_with_padding(image),dest_img_size) # Squares and resizes image
+        square_image = make_square_with_padding(image, dest_img_size) # Squares and resizes image
         cv2.imwrite(f"{img_preprocessed_dir}/{row[1]}/{image_name}", square_image)  # Save the output image
     print(f"{nb_image} images resized to squared image with padding in repository {img_preprocessed_dir}")
 

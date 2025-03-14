@@ -53,7 +53,7 @@ def build_model():
                   metrics=['accuracy'])
     return model
 
-def train_model(path_train_prepro, path_test_prepro, epochs, patience, batch_size, img_size):
+def train_model_cat(path_train_prepro, path_test_prepro, epochs, patience, batch_size, img_size):
     print('🧮 Training of the model')
     train_ds = image_dataset_from_directory(
         path_train_prepro,
