@@ -65,6 +65,7 @@ def make_tensor_train(path_train: str, img_size):
         subset='both',
         image_size=img_size,
         batch_size=32)
+    return train_ds
 
 
 def make_tensor_test(path_test_prepro: str, img_size):
@@ -76,7 +77,7 @@ def make_tensor_test(path_test_prepro: str, img_size):
         seed=123,
         image_size=img_size,
         batch_size=32)
-
+    return test_ds
 
 
 

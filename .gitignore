@@ -402,7 +402,11 @@ FodyWeavers.xsd
 # Env & version files [JCDS]
 .env
 
+data_parent/
 
+scantumor/
+
+scantumor.egg-info/
 
 *.jpeg
 *.png

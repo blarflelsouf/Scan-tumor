@@ -58,17 +58,17 @@ nbr_img = 2500 # -> Nbr of pic no_tumor pic added to the data
 
 ### Train model ###
 
-history_bin = modelbin.train_model_bin(path_train_prepro, path_test_prepro, nbr_img, img_size, patience, epochs, batch_size_train) #Binary#
+# history_bin = modelbin.train_model_bin(path_train_prepro, path_test_prepro, nbr_img, img_size, patience, epochs, batch_size_train) #Binary#
 
-histo_bin_train = history_bin[0]
-recall_bin_train = histo_bin_train.__dict__['history']['recall']
+# histo_bin_train = history_bin[0]
+# recall_bin_train = histo_bin_train.__dict__['history']['recall']
 
-histo_bin_test = history_bin[1]
-print('⭐ Binary model: Recall on train dataset: ', recall_bin_train)
-print('⭐ Binary model: Recall on test dataset: ', histo_bin_test)
+# histo_bin_test = history_bin[1]
+# print('⭐ Binary model: Recall on train dataset: ', recall_bin_train.mean())
+# print('⭐ Binary model: Recall on test dataset: ', histo_bin_test[1])
 
-# Model bin fitted
-model_bin = history_bin[2]
+# # Model bin fitted
+# model_bin = history_bin[2]
 
 
 
