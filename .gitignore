@@ -404,4 +404,7 @@ FodyWeavers.xsd
 
 notebooks/
 raw_data/
-data_parent/
+
+
+*.jpeg
+*.png

@@ -28,3 +28,15 @@ def load_data_dataframe(path_data: str):
     df = pd.concat([img_path_train, label_train], axis=1)
 
     return df # Return a dataframe
+
+
+def load_precise_dataframe(path_file: str):
+    filepaths=[]
+    filelist=os.listdir(path_file)
+    for f in filelist:
+        fpath=os.path.join(path_file,f)
+        filepaths.append(fpath)
+    Fseries=pd.Series(filepaths, name='images_paths')
+
+    dataframe=pd.concat([Fseries], axis=1)
+    return dataframe
