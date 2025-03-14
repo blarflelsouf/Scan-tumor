@@ -1,0 +1,1 @@
+mettre dossier parent en gitignore
