@@ -402,9 +402,9 @@ FodyWeavers.xsd
 # Env & version files [JCDS]
 .env
 
-notebooks/
-raw_data/
 
 
 *.jpeg
 *.png
+
+*.Zone.Identifier
