@@ -48,3 +48,15 @@ def make_and_store_images(data_train, augdir, n, color_mode='rgb', save_prefix='
                 aug_img_count += len(images)
             total +=aug_img_count
     return print('Total Augmented images created= ', total)
+
+
+path = 'data_parent/A_raw_data/'
+data_to_augment = path + 'Training/notumor'
+
+
+
+    data_augment.make_and_store_images(data_train = utils.load_precise_dataframe(data_to_augment),
+                        augdir = 'data_parent/B_data_augmented',
+                        n = 1696, # -> Nbr of non tumor to augmented, if i want 2k pic of non-tumor, i put n=2000
+                        color_mode='rgb',
+                        save_format='png')

@@ -53,7 +53,7 @@ img_size = (224, 224) # -> choose the size of picture
 
 ### Data augmentation ###
 
-data_augment.make_and_store_images(data_train, augdir, n, img_size, color_mode='rgb', save_prefix='aug-',save_format='jpg') # -> create and store pic aug in a directory
+data_augment.make_and_store_images(data_train, augdir, n, color_mode='rgb', save_prefix='aug-',save_format='jpg') # -> create and store pic aug in a directory
 df_aug = data.load_data(local, augdir, type_data) # -> Store the path of pic aug in a df
 data_train = pd.concat([data_train, df_aug]) # -> concat the df train and the df aug
 
