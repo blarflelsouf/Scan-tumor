@@ -7,7 +7,7 @@ requirements = [x.strip() for x in content if "git+" not in x]
 
 setup(name='scantumor',
       version="0.0.1",
-      description="scan tumor Model V0 (automate_model_lifecycle)",
+      description="scan tumor Model V1 (automate_model_lifecycle)",
       license="None",
       author="Team Louis",
       author_email="contact@lewagon.org",
