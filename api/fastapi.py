@@ -33,7 +33,7 @@ async def Scan_img(file: UploadFile = File(...)) -> dict:
     # image processing
     img = Image.open(io.BytesIO(await file.read()))
     image_array = np.asarray(img)
-    image_processed = make_square_with_padding(image_array,(img_size))
+    image_processed = make_square_with_padding(image_array, img_size)
     image_processed = np.expand_dims(image_processed, axis=0)
 
 
@@ -43,12 +43,13 @@ async def Scan_img(file: UploadFile = File(...)) -> dict:
 
 
     # model binary
-    y_pred_binary = y_pred[0][0]
-    if y_pred_binary > 0.95:
-        y_bin = True
-    else:
+    y_pred_binary = y_pred[0]
+    if y_pred_binary<0.5:
         y_bin = False
-    y_recall = round(float(y_pred[0][0][0]), 3)
+    else:
+        y_bin = True
+
+    recall = round(float(y_pred_binary[0]), 3)
 
     # model VGG
     y_pred_cats = y_pred[1]
@@ -56,18 +57,19 @@ async def Scan_img(file: UploadFile = File(...)) -> dict:
     'Type': ["notumor","glioma", 'meningioma', 'pituitary'],
     'Proba': y_pred_cats[0]
 })
-    cat_max = cat.loc[cat["Proba"].idxmax()]
-
-    catmax_prob = round(float(cat_max['Proba']), 3)
-
+    cat_max = cat.loc[cat['Proba'].idxmax()]
+    acc = round(float(cat_max['Proba']), 3)
 
     return {"tumor" : y_bin, # -> Bool
-            "recall" : y_recall, # -> Float
+            "recall" : recall, # -> Float
             "tumor_type" : cat_max['Type'], # -> label class
-            "precision": catmax_prob} # -> Float
+            "precision": acc} # -> Float
 
 
 
 @app.get("/")
 def root():
     return dict(greeting="JC")
+
+
+#plein de trucs !

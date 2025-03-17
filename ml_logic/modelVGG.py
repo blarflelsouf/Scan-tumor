@@ -47,7 +47,7 @@ def build_model():
     model = load_model()
     model = add_last_layers(model)
 
-    opt = optimizers.Adam(learning_rate=0.01)
+    opt = optimizers.Adam(learning_rate=0.001)
     model.compile(loss='categorical_crossentropy',
                   optimizer=opt,
                   metrics=['accuracy'])

@@ -8,6 +8,7 @@ from ml_logic.params import *
 from ml_logic.preprocessor import *
 
 
+
                         ###### Preparation of the data ######
 
 ''' Remove the duplicate in each files '''
@@ -56,7 +57,7 @@ prepro.preprocess_write_squared_image_to_dir(df_test, img_size, root_dest_dir= p
 
 batch_size_train = 256 # -> batch size of training model (128/256 recommended)
 patience = 2 # -> patience of early stopping
-epochs = 20 # -> number of epochs
+epochs = 10 # -> number of epochs
 nbr_img = 2500 # -> Nbr of pic no_tumor pic added to the data
 
 ### Train model ###
@@ -83,8 +84,8 @@ model_bin = history_bin[2]
 ''' Use a VGG16 model to categorized the data, metric used is accuracy'''
 ### Variable for loading data ###
 
-batch_size_train = 256 # -> batch size of training model (64/128 recommended)
-patience = 2 # -> patience of early stopping
+batch_size_train = 128 # -> batch size of training model (64/128 recommended)
+patience = 3 # -> patience of early stopping
 epochs = 20 # -> number of epochs
 
 ### Train model ###
@@ -101,6 +102,9 @@ print('⭐ Accuracy on test dataset: ', histo_cat_test)
 # Model fitted
 model_cat= history_cat[2]
 
+
+print(model_bin)
+print(model_cat)
 
 
 ### Save model ###
