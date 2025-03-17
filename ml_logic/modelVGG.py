@@ -66,6 +66,8 @@ def make_tensor_train(path_train: str, img_size):
         image_size=img_size,
         batch_size=32)
 
+    return train_ds
+
 
 def make_tensor_test(path_test_prepro: str, img_size):
     test_ds = image_dataset_from_directory(
@@ -77,6 +79,7 @@ def make_tensor_test(path_test_prepro: str, img_size):
         image_size=img_size,
         batch_size=32)
 
+    return test_ds
 
 
 
