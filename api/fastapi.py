@@ -5,7 +5,7 @@ from ml_logic.registry import load_model
 from ml_logic.preprocessor import make_square_with_padding
 from ml_logic.params import *
 
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -33,24 +33,32 @@ def transform_image(IMG: bytes) -> np.array:
 img_size = (224,224)
 
 @app.post("/predict")
-def Scan_img(IMG: bytes) -> dict:
+async def Scan_img(file: UploadFile = File(...)) -> dict:
     # image processing
-    image_string = open(IMG, 'rb').read()
-    img = Image.open(io.BytesIO(image_string))
-    X_arr = np.asarray(img)
-    X_processed = make_square_with_padding(X_arr,(img_size))
+    img = Image.open(io.BytesIO(await file.read()))
+    image_array = np.asarray(img)
+    image_processed = make_square_with_padding(image_array,(img_size))
 
-    # model binary prediction
+    # model binary prediction --> A FINALISER
     model_binary = app.state.model.binary
-    y_pred_binary = model_binary.predict(X_processed)
-    tumor = y_pred_binary[0]
-    recall = y_pred_binary[1]
+    y_pred_binary = model_binary.predict(image_processed)
+    #tumor = y_pred_binary[0]
+    #recall = y_pred_binary[1]
 
-    # VGG model prediction
+    # VGG model prediction -> A FINALISER
     model_cats = app.state.model.cats
-    y_pred_cats = model_cats.predict(X_processed)
-    tumor_type = y_pred_cats[0]
-    precision =  y_pred_cats[1]
+    y_pred_cats = model_cats.predict(image_processed)
+    #tumor_type = y_pred_cats[0]
+    #precision =  y_pred_cats[1]
+
+
+
+    tumor = True
+    recall = 0.98
+    tumor_type = 'glioma'
+    precision = 0.97
+
+
 
     return {"tumor" : tumor,
             "recall" : recall,

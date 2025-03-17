@@ -3,6 +3,10 @@ from ml_logic import modelVGG as modelvgg
 from ml_logic import modelBINARY as modelbin
 from ml_logic import data_preparation as prepa
 import utils
+from ml_logic import registry
+from ml_logic.params import *
+from ml_logic.preprocessor import *
+
 
 
                         ###### Preparation of the data ######
@@ -53,7 +57,7 @@ prepro.preprocess_write_squared_image_to_dir(df_test, img_size, root_dest_dir= p
 
 batch_size_train = 256 # -> batch size of training model (128/256 recommended)
 patience = 2 # -> patience of early stopping
-epochs = 20 # -> number of epochs
+epochs = 1 # -> number of epochs
 nbr_img = 2500 # -> Nbr of pic no_tumor pic added to the data
 
 ### Train model ###
@@ -82,14 +86,14 @@ model_bin = history_bin[2]
 
 batch_size_train = 256 # -> batch size of training model (64/128 recommended)
 patience = 2 # -> patience of early stopping
-epochs = 20 # -> number of epochs
+epochs = 1 # -> number of epochs
 
 ### Train model ###
 
 history_cat = modelvgg.train_model_cat(path_train_prepro, path_test_prepro, epochs, patience, batch_size_train, img_size) #VGG16#
 
 histo_cat_train = history_cat[0]
-histo_cat_train = histo_cat_train.__dict__['accuracy'].mean()
+histo_cat_train = histo_cat_train.__dict__['history']['accuracy']
 
 histo_cat_test = history_cat[1]
 print('⭐ Accuracy on train dataset: ', histo_cat_train)
@@ -97,3 +101,37 @@ print('⭐ Accuracy on test dataset: ', histo_cat_test)
 
 # Model fitted
 model_cat= history_cat[2]
+
+
+print(model_bin)
+print(model_cat)
+
+
+
+
+
+
+
+### Save model ###
+
+binary_model_saved = registry.save_model(
+                                    model = model_bin,
+                                    path = LOCAL_REGISTRY_PATH_BINARY)
+
+VGG_model_saved = registry.save_model(
+                                    model = model_cat,
+                                    path = LOCAL_REGISTRY_PATH_CLASS)
+
+
+# Predict function (both binary & vgg)
+
+def predict(X_pred):
+
+    binary_model = registry.load_model(LOCAL_REGISTRY_PATH_BINARY)
+    X_processed = make_square_with_padding(X_pred)
+    y_pred_binary= binary_model.predict(X_processed)
+
+    vgg_model = registry.load_model(LOCAL_REGISTRY_PATH_CLASS)
+    y_pred_VGG= vgg_model.predict(X_processed)
+
+    return y_pred_binary,y_pred_VGG
