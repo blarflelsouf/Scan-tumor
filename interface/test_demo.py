@@ -1,15 +1,6 @@
-from ml_logic import preprocessor as prepro
-from ml_logic import modelVGG as modelvgg
-from ml_logic import modelBINARY as modelbin
-from ml_logic import data_preparation as prepa
-import utils
-from ml_logic import registry
+
 from ml_logic.params import *
 from ml_logic.preprocessor import *
-from api import fastapi
-
-import io
-from PIL import Image
 
 # Predict function (both binary & vgg)
 
