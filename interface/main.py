@@ -6,8 +6,10 @@ import utils
 from ml_logic import registry
 from ml_logic.params import *
 from ml_logic.preprocessor import *
+from api import fastapi
 
-
+import io
+from PIL import Image
 
                         ###### Preparation of the data ######
 
@@ -107,11 +109,6 @@ print(model_bin)
 print(model_cat)
 
 
-
-
-
-
-
 ### Save model ###
 
 binary_model_saved = registry.save_model(
@@ -125,13 +122,12 @@ VGG_model_saved = registry.save_model(
 
 # Predict function (both binary & vgg)
 
-def predict(X_pred):
-
-    binary_model = registry.load_model(LOCAL_REGISTRY_PATH_BINARY)
+def predict(X_pred, binary_model_to_load, vgg_model_to_load):
+    binary_model = binary_model_to_load
     X_processed = make_square_with_padding(X_pred)
     y_pred_binary= binary_model.predict(X_processed)
-
-    vgg_model = registry.load_model(LOCAL_REGISTRY_PATH_CLASS)
-    y_pred_VGG= vgg_model.predict(X_processed)
+    if y_pred_binary:
+        vgg_model = vgg_model_to_load
+        y_pred_VGG= vgg_model.predict(X_processed)
 
     return y_pred_binary,y_pred_VGG

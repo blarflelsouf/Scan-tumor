@@ -1,9 +1,11 @@
 import io
 import numpy as np
+import pandas as pd
 from PIL import Image
 from ml_logic.registry import load_model
 from ml_logic.preprocessor import make_square_with_padding
 from ml_logic.params import *
+from interface import main,test_demo
 
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -23,12 +25,6 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
                     )
 
-def transform_image(IMG: bytes) -> np.array:
-    image_string = open(IMG, 'rb').read()
-    img = Image.open(io.BytesIO(image_string))
-    arr = np.asarray(img)
-    return arr
-
 
 img_size = (224,224)
 
@@ -38,32 +34,31 @@ async def Scan_img(file: UploadFile = File(...)) -> dict:
     img = Image.open(io.BytesIO(await file.read()))
     image_array = np.asarray(img)
     image_processed = make_square_with_padding(image_array,(img_size))
+    image_processed = np.expand_dims(image_processed, axis=0)
 
-    # model binary prediction --> A FINALISER
+
+    # models prediction
     model_binary = app.state.model.binary
-    y_pred_binary = model_binary.predict(image_processed)
-    #tumor = y_pred_binary[0]
-    #recall = y_pred_binary[1]
-
-    # VGG model prediction -> A FINALISER
     model_cats = app.state.model.cats
-    y_pred_cats = model_cats.predict(image_processed)
-    #tumor_type = y_pred_cats[0]
-    #precision =  y_pred_cats[1]
+    y_pred = test_demo.predict(image_processed,model_binary,model_cats)
 
 
+    # model binary
+    y_pred_binary = y_pred[0][0]
+    recall = main.histo_bin_test
 
-    tumor = True
-    recall = 0.98
-    tumor_type = 'glioma'
-    precision = 0.97
+    # model VGG
+    y_pred_cats = y_pred[1][0]
+    cat = pd.DataFrame({
+    'Type': ["notumor","glioma", 'meningioma', 'pituitary'],
+    'Proba': y_pred_cats[0]
+})
+    cat = cat.max()
 
-
-
-    return {"tumor" : tumor,
-            "recall" : recall,
-            "tumor_type" : tumor_type,
-            "precision": precision}
+    return {"tumor" : y_pred_binary, # -> Bool
+            "recall" : recall, # -> Float
+            "tumor_type" : cat['Type'], # -> label class
+            "precision": cat['Proba']} # -> Float
 
 
 
