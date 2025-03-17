@@ -7,7 +7,7 @@ import cv2
 import os
 import shutil
 
-def make_square_with_padding(image: np.ndarray, dest_img_size) -> np.ndarray:
+def make_square_with_padding(image: np.ndarray, dest_img_size=(150,150)) -> np.ndarray:
     """
     Transform a rectangular image into a square image by adding padding.
     """
