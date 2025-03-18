@@ -6,10 +6,8 @@ import utils
 from ml_logic import registry
 from ml_logic.params import *
 from ml_logic.preprocessor import *
-from api import fastapi
 
-import io
-from PIL import Image
+
 
                         ###### Preparation of the data ######
 
@@ -59,7 +57,7 @@ prepro.preprocess_write_squared_image_to_dir(df_test, img_size, root_dest_dir= p
 
 batch_size_train = 256 # -> batch size of training model (128/256 recommended)
 patience = 2 # -> patience of early stopping
-epochs = 1 # -> number of epochs
+epochs = 10 # -> number of epochs
 nbr_img = 2500 # -> Nbr of pic no_tumor pic added to the data
 
 ### Train model ###
@@ -86,9 +84,9 @@ model_bin = history_bin[2]
 ''' Use a VGG16 model to categorized the data, metric used is accuracy'''
 ### Variable for loading data ###
 
-batch_size_train = 256 # -> batch size of training model (64/128 recommended)
-patience = 2 # -> patience of early stopping
-epochs = 1 # -> number of epochs
+batch_size_train = 128 # -> batch size of training model (64/128 recommended)
+patience = 3 # -> patience of early stopping
+epochs = 20 # -> number of epochs
 
 ### Train model ###
 
@@ -118,16 +116,3 @@ binary_model_saved = registry.save_model(
 VGG_model_saved = registry.save_model(
                                     model = model_cat,
                                     path = LOCAL_REGISTRY_PATH_CLASS)
-
-
-# Predict function (both binary & vgg)
-
-def predict(X_pred, binary_model_to_load, vgg_model_to_load):
-    binary_model = binary_model_to_load
-    X_processed = make_square_with_padding(X_pred)
-    y_pred_binary= binary_model.predict(X_processed)
-    if y_pred_binary:
-        vgg_model = vgg_model_to_load
-        y_pred_VGG= vgg_model.predict(X_processed)
-
-    return y_pred_binary,y_pred_VGG
