@@ -32,7 +32,12 @@ img_size = (150,150)
 async def Scan_img(file: UploadFile = File(...)) -> dict:
     # image processing
     img = Image.open(io.BytesIO(await file.read()))
+
+    if len(np.array(img).shape) == 2:  # If image is grayscale
+        img = img.convert("RGB")
+
     image_array = np.asarray(img)
+
     image_processed = make_square_with_padding(image_array, img_size)
     image_processed = np.expand_dims(image_processed, axis=0)
 
@@ -43,13 +48,13 @@ async def Scan_img(file: UploadFile = File(...)) -> dict:
 
 
     # model binary
-    y_pred_binary = y_pred[0]
+    y_pred_binary = y_pred[0][0]
     if y_pred_binary<0.5:
         y_bin = False
     else:
         y_bin = True
 
-    recall = round(float(y_pred_binary[0]), 3)
+    recall = round(float(y_pred_binary), 3)
 
     # model VGG
     y_pred_cats = y_pred[1]
