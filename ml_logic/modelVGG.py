@@ -39,7 +39,7 @@ def add_last_layers(model):
     new_model.add(layers.Dense(64, activation="relu"))
 
     new_model.add(layers.Dropout(0.5))
-    new_model.add(layers.Dense(4, activation="softmax"))
+    new_model.add(layers.Dense(3, activation="softmax"))
 
     return new_model
 
@@ -54,11 +54,11 @@ def build_model():
     return model
 
 
-def make_tensor_train(path_train: str, img_size):
+def make_tensor_train(path_E_dic_cat_train: str, img_size):
     train_ds = image_dataset_from_directory(
-        path_train,
+        path_E_dic_cat_train,
         labels="inferred",
-        class_names=["notumor","glioma", 'meningioma', 'pituitary'],
+        class_names=["glioma", 'meningioma', 'pituitary'],
         label_mode="categorical",
         seed=123,
         validation_split=0.25,
@@ -67,21 +67,18 @@ def make_tensor_train(path_train: str, img_size):
         batch_size=32)
     return train_ds
 
-    return train_ds
 
-
-def make_tensor_test(path_test_prepro: str, img_size):
+def make_tensor_test(path_E_dic_cat_train: str, img_size):
     test_ds = image_dataset_from_directory(
-        path_test_prepro,
+        path_E_dic_cat_train,
         labels="inferred",
-        class_names=["notumor","glioma", 'meningioma', 'pituitary'],
+        class_names=["glioma", 'meningioma', 'pituitary'],
         label_mode="categorical",
         seed=123,
         image_size=img_size,
         batch_size=32)
     return test_ds
 
-    return test_ds
 
 
 

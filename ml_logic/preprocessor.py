@@ -77,7 +77,8 @@ def preprocess_create_dir(src_img_df, root_dest_dir):
 
 def preprocess_write_image(src_img_df: pd.DataFrame,
                         dest_img_size: tuple[int, int],
-                        img_preprocessed_dir):
+                        img_preprocessed_dir,
+                        path_E_dic_cat):
 
     ##################################### RESIZING IMAGES AND WRITE THEM INTO REPOSITORY ##################
     # Create squared images with a black padding
@@ -89,6 +90,8 @@ def preprocess_write_image(src_img_df: pd.DataFrame,
         image_name = os.path.split(row[0])[1] #Tail = image name
         square_image = make_square_with_padding(image, dest_img_size) # Squares and resizes image
         cv2.imwrite(f"{img_preprocessed_dir}/{row[1]}/{image_name}", square_image)  # Save the output image
+        if row[1] != 'notumor':
+            cv2.imwrite(f"{path_E_dic_cat}/{row[1]}/{image_name}", square_image)  # Save the output image in cat repo
     print(f"{nb_image} images resized to squared image with padding in repository {img_preprocessed_dir}")
 
 
@@ -101,8 +104,9 @@ def preprocess_write_image(src_img_df: pd.DataFrame,
 
 def preprocess_write_squared_image_to_dir(src_img_df: pd.DataFrame,
                                           dest_img_size: tuple[int, int],
-                                          root_dest_dir: str) -> None :
+                                          root_dest_dir: str,
+                                          path_e) -> None :
     img_preprocessed_dir = preprocess_create_dir(src_img_df, root_dest_dir)
-    preprocess_write_image(src_img_df, dest_img_size, img_preprocessed_dir)
+    preprocess_write_image(src_img_df, dest_img_size, img_preprocessed_dir, path_e)
 
     print('⭐ Fin du preprocessing')

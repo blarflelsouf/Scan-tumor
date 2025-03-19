@@ -15,3 +15,5 @@ pillow #For image resizing - to delete if not used in preprocess
 opencv-python
 fastapi
 uvicorn
+roboflow
+supervision

@@ -412,3 +412,7 @@ scantumor.egg-info/
 *.png
 
 *.Zone.Identifier
+
+binary_model.pkl
+vgg_model.pkl
+img_yolo
