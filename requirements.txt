@@ -17,3 +17,5 @@ fastapi
 uvicorn
 roboflow
 supervision
+python-multipart
+
