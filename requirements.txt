@@ -18,4 +18,5 @@ uvicorn
 roboflow
 supervision
 python-multipart
-
+roboflow
+supervision
