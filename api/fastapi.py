@@ -5,7 +5,6 @@ from PIL import Image
 from ml_logic.registry import load_model
 from ml_logic.preprocessor import make_square_with_padding
 from ml_logic.params import *
-from ml_logic.modelYOLO import import_predict_model_yolo
 from interface import test_demo
 
 from fastapi import FastAPI, File, UploadFile
